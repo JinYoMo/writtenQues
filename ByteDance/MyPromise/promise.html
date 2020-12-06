@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Promise手动实现</title>
+</head>
+
+<body>
+
+</body>
+<script>
+    //系统提供的promise测试代码
+    let promise = new Promise((resolve, reject) => { //传递执行器 立即执行 这个回调函数就是这个执行器
+        //同步代码
+        // resolve('同步成功');
+        // reject('同步失败');
+        //异步代码
+        // setTimeout(() => {
+        //     // resolve('异步成功');
+        //     reject('异步失败');
+        // }, 2000);
+    });
+    // promise.then方法链式调用时不可以返回当前then返回的promise对象
+    // let p1 = promise.then(value => {
+    //     console.log(value);
+    //     return p1; //报错 promise对象被循环调用
+    // }, reason => {
+    //     console.log(reason);
+    //     return p1;
+    // });
+    // p1.then(value => {
+    //     console.log(value)
+    // }, reason => {
+    //     console.log(reason.message) //错误打印
+    // });
+    //then方法参数变为可选参数 then方法的状态会向下传递
+    // promise
+    //     .then(value => value)
+    //     .then(value => value)
+    //     .then(value => console.log(value, 11), reason => console.log(reason, 22))
+    // 等价于
+    // promise
+    //     .then()
+    //     .then()
+    //     .then(value => console.log(value), reason => console.log(reason))
+    //Promise.all方法解决异步并发问题
+    function p1() {
+        return new Promise((resolve, reject) => {
+            setTimeout(() => {
+                resolve('p1'); //resolve方法延迟2s调用
+            }, 2000);
+        })
+    };
+
+    function p2() {
+        return new Promise((resolve, reject) => {
+            resolve('p2'); //resolve方法立即调用
+        })
+    };
+    //promise.all方法中按照异步代码调用顺序得到异步代码执行结果
+    Promise.all(['a', 'b', p1(), p2(), 'c']).then(result => {
+        console.log(result) //['a','b','p1','p2','c']
+    });
+    //Promise.resolve方法
+    function p3() {
+        return new Promise((resolve, reject) => {
+            resolve('hello');
+        })
+    };
+    Promise.resolve(10).then(value => console.log(value));
+    Promise.resolve(p3()).then(value => console.log(value));
+    //finally方法
+    p3().finally(() => console.log('finally')).then(value => console.log(value))
+</script>
+
+</html>
