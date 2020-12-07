@@ -26,17 +26,17 @@
  */
 
 //导入MyPromise
-const MyPromise = require('./myPromise');
+const MyPromise = require('./myPromiseWork');
 let promise = new MyPromise((resolve, reject) => { //传递执行器 立即执行 这个回调函数就是这个执行器
     // throw new Error('executor error'); //抛出一个executor执行器错误
     //同步代码
     // resolve('同步成功'); //直接调用某个函数 调用的是普通函数 这个函数里的this指向window或者undifined
-    reject('同步失败');
+    // reject('同步失败');
     //加入异步代码
-    // setTimeout(() => {
-    //     // resolve('异步成功');
-    //     reject('异步失败');
-    // }, 2000);
+    setTimeout(() => {
+        // resolve('异步成功');
+        reject('异步失败');
+    }, 2000);
 });
 //promise.then方法多次调用
 // promise.then(value => {
@@ -83,7 +83,7 @@ let promise = new MyPromise((resolve, reject) => { //传递执行器 立即执�
 // }, reason => {
 //     console.log(reason.message)
 // });
-// // promise.then方法链式调用时不可以返回当前then返回的promise对象
+// promise.then方法链式调用时不可以返回当前then返回的promise对象
 // let p1 = promise.then(value => {
 //     console.log(value);
 //     return p1; //报错 promise对象被循环调用
@@ -131,7 +131,7 @@ function p2() {
 MyPromise.all(['a', 'b', p1(), p2(), 'c']).then(result => {
     console.log(result) //['a','b','p1','p2','c']
 });
-//Promise.resolve方法
+// //Promise.resolve方法
 function p3() {
     return new MyPromise((resolve, reject) => {
         resolve('hello');
