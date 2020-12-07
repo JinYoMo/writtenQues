@@ -22,7 +22,9 @@
  *    调用方式为类.all方法,all方法一定是静态方法
  * 13.Promise.resolve方法作用是将给定的值转换为Promise对象，也就是说Promise.resolve方法的返回值就是一个promise对象
  *   判断给定值是普通值还是promise对象：若为普通值，在返回的promise对象当中会包裹给定的这个值，并将创建出来的promise对象作为resolve方法的返回值;若为promise对象，会将此promise对象直接作为resolve方法的返回值，通过then拿到该promise对象的返回值
-    
+ * 14.finally方法有两个特点：第一：无论当前promise最终的状态是成功还是失败，finally回调函数始终都会被执行一次;finally方法的后面可以链式调用then方法拿到当前promise最终返回的结果
+ *    finally方法要定义在类的原型对象上面，不是静态方法
+ * 15.catch方法返回Promise对象,直接调用内部then方法直接传入失败回调即可,成功回调为undefined;catch方法处理当前promise对象为失败的情况
  */
 
 //导入MyPromise
@@ -114,28 +116,56 @@ let promise = new MyPromise((resolve, reject) => { //传递执行器 立即执�
 //     .then()
 //     .then(value => console.log(value), reason => console.log(reason))
 //Promise.all方法解决异步并发问题
-function p1() {
+// function p1() {
+//     return new MyPromise((resolve, reject) => {
+//         setTimeout(() => {
+//             resolve('p1'); //resolve方法延迟2s调用
+//         }, 2000);
+//     })
+// };
+
+// function p2() {
+//     return new MyPromise((resolve, reject) => {
+//         resolve('p2'); //resolve方法立即调用
+//     })
+// };
+//promise.all方法中按照异步代码调用顺序得到异步代码执行结果
+// MyPromise.all(['a', 'b', p1(), p2(), 'c']).then(result => {
+//     console.log(result) //['a','b','p1','p2','c']
+// });
+// //Promise.resolve方法
+// function p3() {
+//     return new MyPromise((resolve, reject) => {
+//         resolve('hello');
+//     })
+// };
+// MyPromise.resolve(10).then(value => console.log(value));
+// MyPromise.resolve(p3()).then(value => console.log(value), reason => console.log(reason.message));
+
+//promise的finally方法
+function fn1() {
     return new MyPromise((resolve, reject) => {
         setTimeout(() => {
-            resolve('p1'); //resolve方法延迟2s调用
+            resolve('fn1 resolve');
+            // reject('fn1 reject');
         }, 2000);
     })
 };
 
-function p2() {
+function fn2() {
     return new MyPromise((resolve, reject) => {
-        resolve('p2'); //resolve方法立即调用
+        // resolve('fn2 resolve');
+        reject('fn2 reject');
     })
-};
-//promise.all方法中按照异步代码调用顺序得到异步代码执行结果
-MyPromise.all(['a', 'b', p1(), p2(), 'c']).then(result => {
-    console.log(result) //['a','b','p1','p2','c']
-});
-// //Promise.resolve方法
-function p3() {
-    return new MyPromise((resolve, reject) => {
-        resolve('hello');
-    })
-};
-MyPromise.resolve(10).then(value => console.log(value));
-MyPromise.resolve(p3()).then(value => console.log(value), reason => console.log(reason.message));
+}
+// fn2().finally(() => {
+//     console.log('finally');
+//     return fn1(); //等待2s后才可以执行then输出fn2 resolve
+// }).then(value => {
+//     console.log(value);
+// }, reason => {
+//     console.log(reason, 22);
+// });
+//catch方法
+fn2().then(value => console.log(value))
+    .catch(reason => console.log(reason, 22))

@@ -119,6 +119,21 @@ class MyPromise {
         });
         return promise2;
     };
+    //finally方法定义在原型对象上
+    finally(callback) {
+        //从then中拿到当前promise的状态;无论当前promise状态是成功还是失败，都要执行回调函数;finally方法返回一个promise，并通过return将状态继续传递下去
+        return this.then(value => {
+            //将finally的回调函数的返回值不论是普通值还是promise均通过promise.resolve方法转变为promise，执行promise完成后再将value返回
+            return MyPromise.resolve(callback()).then(() => value);
+        }, reason => {
+            return MyPromise.resolve(callback()).then(() => { throw reason });
+        })
+    };
+    //catch方法定义在原型对象上
+    catch (failCallback) {
+        //catch方法返回promise对象 内部调用then方法注册失败回调
+        return this.then(undefined, failCallback);
+    };
     //all方法为静态方法 用static声明
     static all(array) {
         let result = [];
