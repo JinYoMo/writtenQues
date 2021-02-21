@@ -95,3 +95,20 @@
     }
   //测试数据
   console.log(dataSource)
+
+  /**
+   * 排序：将baseSource先按num排序，若num相等，按id排序  排序方式：从小到大
+   */
+  var baseSource = [
+      {  id: 4, num: 2 },
+      {  id: 3, num: 1 },
+      { id: 6, num: 3 },
+      {  id: 8, num: 5 },
+      {  id: 2, num: 4 },
+      {  id: 1, num: 4 }
+  ];
+
+  function sortFunc(a,b){
+    return a.num-b.num===0?a.id-b.id:a.num-b.num;
+  }
+console.log(baseSource.sort(sortFunc),22);  //从小到大排列

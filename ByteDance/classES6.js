@@ -15,14 +15,14 @@ let p1=new Person('Jone','22');
 p1.swim()
 
 //方法二
-class Cat{
-  constructor(name,color){
-    this.name=name;
+class Animal{
+  constructor(type,color){
+    this.type=type;
     this.color=color;
   }
   jump(){
-    console.log('Cat can jump')
+    console.log('Animal can jump')
   }
 }
-let c=new Cat('mimi','white');
+let c=new Animal('cat','white');
 c.jump()
