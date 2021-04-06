@@ -9,7 +9,27 @@ _=require('lodash')
 function getSum(a,b,c,d){
   return a+b+c+d;
 }
-let sumCurried=_.curry(getSum);
+// let sumCurried=_.curry(getSum);
+// console.log(sumCurried(1))  //Fuction
+// console.log(sumCurried(1,2,3,4)) //10
+// console.log(sumCurried(1,2,3)) //Function
+// console.log(sumCurried(1)(2)(3)(4)) //10
+// console.log(sumCurried(1)(2,3)(4)) //10
+// console.log(sumCurried(1)(2,3,4)) //10
+
+//美团一面——模拟实现lodash中curry方法
+function curry(func){
+  return function curriedFn(...args){
+    //判断实参与形参的个数 形参可通过函数名.length获取 arguments为伪数组
+    if(args.length<func.length){
+      return function(){
+        return curriedFn(...args.concat(Array.from(arguments)))
+      }
+    }
+    return func(...args)
+  }
+}
+let sumCurried=curry(getSum);
 console.log(sumCurried(1))  //Fuction
 console.log(sumCurried(1,2,3,4)) //10
 console.log(sumCurried(1,2,3)) //Function

@@ -10,6 +10,10 @@ function removeRepeat(arr){
   }
   return tempArr;
 }
+//数组去重
+function repet1(arr){
+  return Array.from(new Set(arr))
+}
 
 let a1=['5','7','12','12','2','4','2','12','4','5']
 let resultArr=removeRepeat(a1);
